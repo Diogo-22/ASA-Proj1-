@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 using namespace std;
+#include <sstream>
 
 int calc(int a, int b, vector<vector<int> >& opTable) {
     return opTable[a-1][b-1];
@@ -39,15 +40,31 @@ int main() {
     vector<int> sequence2 = sequence;
     int counter = 0;
     do{
+    sequence2 = sequence;
     if (counter > 0) {
-        for (int l = m; l > l-counter; l--) {
-            sequence2[l-1] = calc(sequence2[l-1], sequence2[l], opTable);
-
+            sequence2[1+counter] = calc(sequence2[1+counter], sequence2[2+counter], opTable);
+   
+    }
+    
+    for (int i = 1; i < m; i++) {
+        if (counter == 0) {
+            sequence2[i] = calc(sequence2[i-1], sequence2[i], opTable);
+        }   
+        else if(2 + counter != i)
+            sequence2[i] = calc(sequence2[i-1], sequence2[i], opTable);
+        else {
+            sequence2[i] = sequence2[i-1];
         }
     }
-    vector<int> sequence2 = sequence;
-    for (int i = 1; i < m-counter; ++i) {
-        sequence2[i] = calc(sequence2[i-1], sequence2[i], opTable);
+
+    string s = "";
+    for (int i = 0; i < n+1; i++) {
+        s += "(";
+    }
+    s += to_string(sequence[0]) + " " + to_string(sequence[1]) + ")";
+
+    for (int i = 0; i < m; i++) {
+        cout << "(" << sequence[i] << " "; 
     }
     if( sequence2.back() == desiredResult ) {
         cout << "YES\n";
@@ -56,7 +73,7 @@ int main() {
     }
     counter++;
     } while (sequence2.back() != desiredResult || counter > m);
-    
+
     // Apenas para verificar a leitura (debug)
     /* cout << "n: " << n << ", m: " << m << '\n';
     cout << "Tabela de Operações:\n";
