@@ -7,10 +7,10 @@ int main() {
     int n, m;
 
     // Leitura de n e m
-    std::cin >> n >> m;
+    cin >> n >> m;
 
     // Leitura da tabela de operações (matriz n x n)
-    std::vector<std::vector<int>> opTable(n, std::vector<int>(n));
+    vector<std::vector<int>> opTable(n, std::vector<int>(n));
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             std::cin >> opTable[i][j];
