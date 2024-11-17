@@ -57,17 +57,28 @@ int main() {
         }
     }
 
-    string s = "";
+   
+    if( sequence2.back() == desiredResult ) {
+        cout << "YES\n";
+         string s = "";
     for (int i = 0; i < n+1; i++) {
         s += "(";
     }
     s += to_string(sequence[0]) + " " + to_string(sequence[1]) + ")";
 
-    for (int i = 0; i < m; i++) {
-        cout << "(" << sequence[i] << " "; 
+    for (int i = 2; i < m; i++) {
+        if (i == 1 + counter) {
+            s += " (" + to_string(sequence[i]) +" "+ to_string(sequence[i+1]) + "))";
+        }
+        else if (i == 2 + counter && counter > 0) {
+            continue;
+        }
+        else {
+            s += " " + to_string(sequence[i]) + ")";
+        }
+        
     }
-    if( sequence2.back() == desiredResult ) {
-        cout << "YES\n";
+    cout << s << '\n';
     } else {
         cout << "NO\n";
     }
