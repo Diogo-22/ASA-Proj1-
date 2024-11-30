@@ -15,57 +15,83 @@ int main() {
     std::cin.tie(0);
     int n, m;
     int result = 0;
-    //cout << "Digite n e m: ";
 
     // Leitura de n e m
     cin >> n >> m;
-    //cout << "n: " << n << ", m: " << m << '\n';
-
 
     // Leitura da tabela de operações (matriz n x n)
     vector<vector<int> > opTable(n, vector<int>(n));
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             cin >> opTable[i][j];
         }
     }
 
+    // Leitura da sequência de inteiros
+    vector<vector<vector<int> > > resTable(m, vector<vector<int> >(2*m, vector<int>(1)));
+    for (int i = 0; i < m; i++) {
+       cin >> resTable[i][i][0];
+    }
+
      int desiredResult;
     cin >> desiredResult;
-    int counter = 0;
+    int counter = 1;
+    int placeholder = m-1;
+    int nºsol = 0; 
+    while (counter <= m-1)
+    { for (int i = 0; i < placeholder; i++) {  
+        printf("i: %d, counter: %d\n", i, counter);       
+                
+                if (counter == m-1){
+                    for (int x = 0; x < m; x++)
+                    {
+                        if(resTable[i][i+counter-1][x] != 0)
+                        {
+                            nºsol++;
+                        }        
+                   }
+                   printf("nºsol: %d\n", nºsol);
 
-    // Leitura da sequência de inteiros
-    vector<vector<int> > resTable(m, vector<int>(m));
-    for (int i = 0; i < m; ++i) {
-       cin >> resTable[i][i];
-    }
-
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < m; ++j) {
-            //printf("i: %d, j: %d\n", i, j);
-            if(j>i+1){
-            resTable[i][j] = calc(resTable[i][j-1], resTable[i+2][j], opTable);
-            //resTable[i][j] = calc(resTable[i][j-2], resTable[i+1][j], opTable);
-            }
-            else if (j == i+1){
-                resTable[i][j] = calc(resTable[i][j-1], resTable[i+1][j], opTable);
-            }
+                    for (int j = 0; j < nºsol ; j++)
+                    {
+                    resTable[i][i+counter][j] = calc(resTable[i][i-1+counter][j], resTable[i+counter][i+counter][0], opTable);
+                    resTable[i][i+counter][j+1+nºsol] = calc(resTable[0][0][0], resTable[i+1][i+counter][j], opTable);
+                
+                    }
+                    resTable[i][i+counter][nºsol] = calc(resTable[i][i+counter-2][0], resTable[i+2][i+counter][0], opTable);
+                   }
+                else if(counter > 1){
+                
+                resTable[i][i+counter][0] = calc(resTable[i][i-1+counter][0], resTable[i+2][i+counter][0], opTable);
+                
+                resTable[i][i+counter][1] = calc(resTable[i][i-2+counter][0], resTable[i+1][i+counter][0], opTable);
+                printf("reached here2\n");
+                }
+                else if (counter == 1){
+                    
+                    resTable[i][i+counter][0] = calc(resTable[i][i-1+counter][0], resTable[i+1][i+counter][0], opTable);
+                    printf("reached here\n");
+                }
         }
-    }
-
-    //print resTable
-    for (int i = 0; i < m; ++i) {
-        for (int j = 0; j < m; ++j) {
-            //if(j>=i)
-            cout << resTable[i][j] << " ";
-        }
-        cout << '\n';
+         counter++;
+        placeholder--;
     }
     
 
+    //print resTable
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < m; j++) {
+            cout << "[";
+            for (int z = 0; z < 2*m; z++)
+            {
+                cout << resTable[i][j][z] << ", ";
+            }
+            cout << "] ";
+        }
+        cout << '\n';
+    }
+
     // Leitura do resultado desejado
-   
- 
 
     return 0;
 }
