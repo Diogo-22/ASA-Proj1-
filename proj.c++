@@ -30,83 +30,42 @@ int main() {
         }
     }
 
-    // Leitura da sequência de inteiros
-    vector<int> sequence(m);
-    for (int i = 0; i < m; ++i) {
-        cin >> sequence[i];
-    }
-
-    // Leitura do resultado desejado
-    int desiredResult;
+     int desiredResult;
     cin >> desiredResult;
-    vector<int> sequence2 = sequence;
     int counter = 0;
-    do{
-    sequence2 = sequence;
-    if (counter > 0) {
-            sequence2[1+counter] = calc(sequence2[1+counter], sequence2[2+counter], opTable);
-   
+
+    // Leitura da sequência de inteiros
+    vector<vector<int> > resTable(m, vector<int>(m));
+    for (int i = 0; i < m; ++i) {
+       cin >> resTable[i][i];
     }
-    
-    for (int i = 1; i < m; i++) {
-        if (counter == 0) {
-            sequence2[i] = calc(sequence2[i-1], sequence2[i], opTable);
-        }   
-        else if(2 + counter != i)
-            sequence2[i] = calc(sequence2[i-1], sequence2[i], opTable);
-        else {
-            sequence2[i] = sequence2[i-1];
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < m; ++j) {
+            //printf("i: %d, j: %d\n", i, j);
+            if(j>i+1){
+            resTable[i][j] = calc(resTable[i][j-1], resTable[i+2][j], opTable);
+            //resTable[i][j] = calc(resTable[i][j-2], resTable[i+1][j], opTable);
+            }
+            else if (j == i+1){
+                resTable[i][j] = calc(resTable[i][j-1], resTable[i+1][j], opTable);
+            }
         }
     }
 
-   
-    if( sequence2.back() == desiredResult ) {
-        //cout << "YES\n";
-        result = 1;
-        cout << "1\n";
-         string s = "";
-    for (int i = 0; i < n+1; i++) {
-        s += "(";
-    }
-    s += to_string(sequence[0]) + " " + to_string(sequence[1]) + ")";
-
-    for (int i = 2; i < m; i++) {
-        if (i == 1 + counter) {
-            s += " (" + to_string(sequence[i]) +" "+ to_string(sequence[i+1]) + "))";
-        }
-        else if (i == 2 + counter && counter > 0) {
-            continue;
-        }
-        else {
-            s += " " + to_string(sequence[i]) + ")";
-        }
-        
-    }
-    cout << s << '\n';
-    } /* else {
-        //cout << "NO\n";
-    } */
-    counter++;
-    } while ((sequence2.back() != desiredResult || counter > m)&& counter +2 < m);
-
-    if (result == 0) {
-        cout << "0\n";
-    }
-
-    // Apenas para verificar a leitura (debug)
-    /* cout << "n: " << n << ", m: " << m << '\n';
-    cout << "Tabela de Operações:\n";
-    for (const auto& row : opTable) {
-        for (int val : row) {
-            cout << val << ' ';
+    //print resTable
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < m; ++j) {
+            //if(j>=i)
+            cout << resTable[i][j] << " ";
         }
         cout << '\n';
     }
-    cout << "Sequência: ";
-    for (int val : sequence) {
-        cout << val << ' ';
-    }
-    cout << "\nResultado Desejado: " << desiredResult << '\n'; */
+    
+
+    // Leitura do resultado desejado
+   
+ 
 
     return 0;
 }
