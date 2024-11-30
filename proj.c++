@@ -11,13 +11,15 @@ int calc(int a, int b, vector<vector<int> >& opTable) {
 
 
 int main() {
+    std::ios::sync_with_stdio(0);
+    std::cin.tie(0);
     int n, m;
-
-    cout << "Digite n e m: ";
+    int result = 0;
+    //cout << "Digite n e m: ";
 
     // Leitura de n e m
     cin >> n >> m;
-    cout << "n: " << n << ", m: " << m << '\n';
+    //cout << "n: " << n << ", m: " << m << '\n';
 
 
     // Leitura da tabela de operações (matriz n x n)
@@ -59,7 +61,9 @@ int main() {
 
    
     if( sequence2.back() == desiredResult ) {
-        cout << "YES\n";
+        //cout << "YES\n";
+        result = 1;
+        cout << "1\n";
          string s = "";
     for (int i = 0; i < n+1; i++) {
         s += "(";
@@ -79,11 +83,15 @@ int main() {
         
     }
     cout << s << '\n';
-    } else {
-        cout << "NO\n";
-    }
+    } /* else {
+        //cout << "NO\n";
+    } */
     counter++;
-    } while (sequence2.back() != desiredResult || counter > m);
+    } while ((sequence2.back() != desiredResult || counter > m)&& counter +2 < m);
+
+    if (result == 0) {
+        cout << "0\n";
+    }
 
     // Apenas para verificar a leitura (debug)
     /* cout << "n: " << n << ", m: " << m << '\n';
