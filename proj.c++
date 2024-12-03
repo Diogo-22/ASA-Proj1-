@@ -5,6 +5,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <cstring>
+#include <functional>
 
 
 using namespace std;
@@ -24,13 +25,13 @@ int main() {
     std::ios::sync_with_stdio(0);
     std::cin.tie(0);
     int n, m;
-    int result = 0;
 
     // Leitura de n e m
     cin >> n >> m;
 
     // Matriz de HashTables
     vector<vector<unordered_map<int, int> > > resultHash(m, vector<unordered_map<int, int> >(m));
+    hash<int> intHash;
     
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < m; j++) {
@@ -49,50 +50,84 @@ int main() {
     }
 
     // Leitura da sequência de inteiros
-    vector<vector<vector<int> > > resTable(m, vector<vector<int> >(n, vector<int>(1)));
+    vector<vector<vector<Bolinha> > > resTable(m, vector<vector<Bolinha> >(m));
+
     for (int i = 0; i < m; i++) {
-       cin >> resTable[i][i][0];
+        resTable[i][i].push_back(Bolinha());
+       cin >> resTable[i][i][0].res;
+       resTable[i][i][0].lastIndex = -1;
+         resTable[i][i][0].resLeft = -1;
+            resTable[i][i][0].resRight = -1;
+
     }
 
-     int desiredResult;
+    int desiredResult;
     cin >> desiredResult;
-    int counter = 0;
-    int nºsol = 0; 
+    int counter = 1;
+    //int nºsol = 0; 
     int placeholder = 0;
-    for (int i = 0; i < m; i++) {  
+    while (counter < m)
+    {
+    for (int i = 0; i < m-1; i++) {  
             //for ( int j= counter; j < m; j++){
             int j = i+counter;
-                for (int x = j-1; x >= i, x++){
+            if(j >= m)
+                {break;}
+                for (int x = j-1; x >= i; x--){
                     for (int z = 0; z < n; z++)
                     {
+                         //printf("i: %d, j: %d, x: %d, z: %d\n", i, j, x, z);
+                        if (resTable[i][x][z].res == 0)
+                        {
+                            break;
+                        }
                         for (int k = 0; k < n; k++)
                         {
-                            placeholder = calc(resTable[i][x][z], resTable[x+1][j][k], opTable);
-                        if(resTable[i][j][z] does not contains placeholder)
-                            {resTable[i][j][z] = placeholder;
-                            new Bolinha = {resTable[i][j][z], j, resTable[i][j-1][z], resTable[j][j][0]};
-                            
+                            // printf("i: %d, j: %d, x: %d, z: %d, k: %d\n", i, j, x, z, k);
+                            if (resTable[x+1][j][k].res == 0)
+                        {
+                            break;
+                        }
+                            //printf("reach\n");
+                           
+                            placeholder = calc(resTable[i][x][z].res, resTable[x+1][j][k].res, opTable);
+                            //printf("placeholder: %d\n", placeholder);
+                        //if(resTable[i][j][z] does not contains placeholder)
+                        if(resultHash[i][j][intHash(placeholder)] == 0)
+                            {
+                                //printf("reach2\n");
+                                resultHash[i][j][intHash(placeholder)] = 1;
+                                //printf("reach3\n");
+                            Bolinha b = {placeholder, x, resTable[i][x][z].res, resTable[x+1][j][k].res};
+                            //printf("reach4\n");
+                            resTable[i][j].push_back(b);
+                            //printf("reach5\n");
+                            //printf("resTable[%d][%d][%d]: %d\n", i, j, z, resTable[i][j][z].res);
                             }
+                        //printf("reach6\n");
                         }
                     
                     }
                 }
            // }
-           counter++;
+           
         }
     
-
+counter++;
+}
     
 
     //print resTable
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < m; j++) {
-            cout << "[";
-            for (int z = 0; z < 2*m; z++)
+            if (j>=i){
+                cout << "[";
+            for (int z = 0; z < n; z++)
             {
-                cout << resTable[i][j][z] << ", ";
+                cout << resTable[i][j][z].res << ", ";
             }
-            cout << "] ";
+            cout << "] ";}
+            
         }
         cout << '\n';
     }
