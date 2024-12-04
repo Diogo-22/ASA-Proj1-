@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <cstring>
 #include <functional>
+#include <string>
 
 
 using namespace std;
@@ -19,6 +20,28 @@ typedef struct {
 
 int calc(int a, int b, vector<vector<int> >& opTable) {
     return opTable[a-1][b-1];
+}
+
+string recursive(int i, int j, int res, int n, vector<vector<vector<Bolinha> > >& resTable){
+    // Diagonal principal
+    if (resTable[i][j][0].lastIndex == -1){
+        return to_string(resTable[i][j][0].res);
+    }
+    else {
+        for (int k = 0; k < n; k++){
+            if (resTable[i][j][k].res == res){
+                int left_j = resTable[i][j][k].lastIndex;
+                int right_i = left_j + 1;
+                int left_res = resTable[i][j][k].resLeft;
+                int right_res = resTable[i][j][k].resRight;
+                string left = recursive(i,left_j,left_res,n,resTable);
+                string right = recursive(right_i,j,right_res,n,resTable);
+                return "(" + left + " " + right + ")";
+            }
+        }
+        return "0";
+        
+    }
 }
 
 int main() {
@@ -115,10 +138,14 @@ int main() {
     
 counter++;
 }
+    string output = recursive(0,m-1,desiredResult,n,resTable);
+    if(output != "0")
+        cout << "1\n";
+    cout << output << '\n';
     
 
     //print resTable
-    for (int i = 0; i < m; i++) {
+    /* for (int i = 0; i < m; i++) {
         for (int j = 0; j < m; j++) {
             if (j>=i){
                 cout << "[";
@@ -130,7 +157,7 @@ counter++;
             
         }
         cout << '\n';
-    }
+    } */
 
     // Leitura do resultado desejado
 
