@@ -33,17 +33,17 @@ string recursive(int i, int j, int res, int n, vector<vector<vector<Bolinha> > >
     else {
         for (int k = 0; k < n; k++){
             if (resTable[i][j][k].res == res){
-                //printf("res da bolinha = %d\n", resTable[i][j][k].res);
+            
             int left_j = resTable[i][j][k].lastIndex;
             int right_i = left_j + 1;
             int left_res = resTable[i][j][k].resLeft;
             int right_res = resTable[i][j][k].resRight;
+
             string left = recursive(i,left_j,left_res,n,resTable);
             string right = recursive(right_i,j,right_res,n,resTable);
             return "(" + left + " " + right + ")";
             }
         }
-        //printf("recursive 0\n");
         return "0";
         
     }
@@ -87,70 +87,53 @@ int main() {
     int counter = 1;
     while (counter < m)
     {
-    for (int i = 0; i < m-1; i++) {  
-            //for ( int j= counter; j < m; j++){
+        for (int i = 0; i < m-1; i++) {  
             int j = i+counter;
             if(j >= m)
                 {break;}
 
-                int n_sol = 0;
-                // Vetor de resultados
-                vector<bool> results = vector<bool>(n, false);
+            int n_sol = 0;
+            // Vetor de resultados já calculados
+            vector<bool> results = vector<bool>(n, false);
 
-                for (int x = j-1; x >= i && n_sol != n; x--){
-                    if (n_sol == n)
-                    {
-                        break;
-                    }
+            for (int x = j-1; x >= i && n_sol != n; x--) 
+            {
+                if (n_sol == n)
+                {
+                    break;
+                }
                     
-                    vector<Bolinha> left_solutions = resTable[i][x]; 
-                   
-                    for (int z = 0; z < (int) left_solutions.size() && n_sol != n; z++)
+                vector<Bolinha> left_solutions = resTable[i][x]; 
+                
+                for (int z = 0; z < (int) left_solutions.size() && n_sol != n; z++)
+                {
+                    int lv = left_solutions[z].res; 
+                    vector<Bolinha> right_solutions = resTable[x+1][j]; 
+                            
+                    for (int k = 0; k < (int) right_solutions.size() && n_sol != n; k++)
                     {
-                        int lv = left_solutions[z].res; 
-                        vector<Bolinha> right_solutions = resTable[x+1][j]; 
-                              
-                        for (int k = 0; k < (int) right_solutions.size() && n_sol != n; k++)
+                        int rv = right_solutions[k].res;   
+                        int v = calc(lv, rv, n, opTable);
+        
+                        if(!results[v]) 
                         {
-                            int rv = right_solutions[k].res;   
-                            int v = calc(lv, rv, n, opTable);
-            
-                            if(!results[v]) {
-                                results[v] = true;
-                                Bolinha b = {v, x, lv, rv};
-                                resTable[i][j].push_back(b);
-                                n_sol++;
-                            }
+                            results[v] = true;
+                            Bolinha b = {v, x, lv, rv};
+                            resTable[i][j].push_back(b);
+                            n_sol++;
                         }
                     }
                 }
+            }
            
         }
     
-counter++;
-}
+        counter++;
+    }
     string output = recursive(0,m-1,desiredResult,n,resTable);
     if(output != "0")
         cout << "1\n";
     cout << output << '\n';
-    
-
-    //print resTable
-    /* for (int i = 0; i < m; i++) {
-        for (int j = 0; j < m; j++) {
-            if (j>=i){
-                cout << "[";
-            for (int z = 0; z < n; z++)
-            {
-                cout << resTable[i][j][z].res << ", ";
-            }
-            cout << "] ";}
-            
-        }
-        cout << '\n';
-    } */
-
-    // Leitura do resultado desejado
 
     return 0;
 }
